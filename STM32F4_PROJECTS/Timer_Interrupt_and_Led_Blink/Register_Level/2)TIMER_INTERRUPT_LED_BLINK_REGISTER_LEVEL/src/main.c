@@ -4,10 +4,10 @@
 
 #define 	PLL_M		4
 #define 	PLL_N		180
-#define 	PLL_P		0		//PLLP = 2
+#define 	PLL_P		0	//PLLP = 2
 
 #define 	TIMER_PRESCALER		17999
-#define		TIMER_ARR			999
+#define		TIMER_ARR		999
 
 
 void System_Clock_Config(void)
@@ -50,30 +50,30 @@ void GPIO_Config(void)
 
 void Timer_Config(void)
 {
-	// 1. Timer saatini etkinleþtir.
+	// 1. Timer saatini etkinleÃ¾tir.
 	RCC->APB1ENR |= (1 << 0);
 
-	// 2. Timer ayarlarý
+	// 2. Timer ayarlarÃ½
 	TIM2->PSC = TIMER_PRESCALER;		//Prescaler
 	TIM2->ARR = TIMER_ARR;				//Auto-reload register
 
-	// 3. Timer kesmelerini etkinleþtir
-	TIM2->DIER |= TIM_DIER_UIE;			//Güncelleme kesme izni
-	NVIC_EnableIRQ(TIM2_IRQn);			//Timer 2 kesmesini NVIC'te etkinleþtir.
+	// 3. Timer kesmelerini etkinleÃ¾tir
+	TIM2->DIER |= TIM_DIER_UIE;			//GÃ¼ncelleme kesme izni
+	NVIC_EnableIRQ(TIM2_IRQn);			//Timer 2 kesmesini NVIC'te etkinleÃ¾tir.
 
-	// 4. Timer'ý baþlat
+	// 4. Timer'Ã½ baÃ¾lat
 	TIM2->CR1 |= TIM_CR1_CEN;
 
 }
 
 void TIM2_IRQHandler(void)
 {
-	if (TIM2->SR & TIM_SR_UIF) {		//Güncelleme kesme bayraðýný kontrol et.
+	if (TIM2->SR & TIM_SR_UIF) {		//GÃ¼ncelleme kesme bayraÃ°Ã½nÃ½ kontrol et.
 
-		TIM2->SR &= ~TIM_SR_UIF;		// Kesme bayraðýný temizle
+		TIM2->SR &= ~TIM_SR_UIF;		// Kesme bayraÃ°Ã½nÃ½ temizle
 
-		// Led durumunu deðiþtir.
-		GPIOA->ODR ^= (1 << 5);		// PA5 pinini deðiþtir.
+		// Led durumunu deÃ°iÃ¾tir.
+		GPIOA->ODR ^= (1 << 5);		// PA5 pinini deÃ°iÃ¾tir.
 	}
 }
 int main(void)
