@@ -1,0 +1,86 @@
+- Flash bellek, mikrodenetleyicilerin program kodlarını sakladığı ve çalıştırdığı bir tür kalıcı hafızadır.
+- Flash bellek ile ilgili ayarlar, işlemcinin performansını ve erişim hızını optimize etmek için yapılır.
+- STM32F4 serisi mikrodenetleyicilerde  bu ayarlar "FLASH->ACR" (Flash Access Control Register) register'ında yapılandırılır. Bu ayarları detaylı olarak inceleyelim.
+
+1. FLASH_ACR_ICEN : Flash Komut Ön Bellek (Instruction Cache) Etkinleştirme
+  
+   FLASH->ACR |= FLASH_ACR_ICEN;
+
+-> Flash komut önbelleğini (cache) etkinleştirir.
+-> Komut önbelleği, işlemcinin Flash bellekteki komutlara hızlıca erişebilmesi için kullanılır. Bu önbellek, daha önce kullanılan komutların kopyalarını saklar, böylece işlemci aynı komutu tekrar okurken
+   daha hızlı erişim sağlar. Bu, işlemcinin komutları hızlı bir şekilde alamsını ve dolayısıyla işlem hızının artmasını sağlar.
+
+
+2. FLASH_ACR_DCEN : Flash Veri Ön Bellek (Data Cache) Etkinleştirme
+
+   FLASH->ACR |= FLASH_ACR_DCEN;
+
+-> Flash veri önbelleği (cache) etkinleştirir.
+-> Veri önbelleği, Flash bellekteki verilerin hızlı bir şekilde erişilmesini sağlar. Bu, daha önce okunan verilerin bir kopyasını saklayarak, veri okuma işlemlerinde gecikmeleri azaltır.
+   Veri önbelleği etkinleştirildiğinde, aynı verilerin tekrar tekrar okunması gerektiğinde işlemci daha hızlı erişim sağlar, bu da genel performansı arttırır.
+
+3. FLASH_ACR_PRFTEN : Flash Ön Bellekleme (Prefetch Buffer) Etkinleştirme
+
+   FLASH->ACR |= FLASH_ACR_PRFTEN;
+
+-> Flash ön bellekleme (prefetch buffer) işlemini etkinleştirir.
+-> Ön bellekleme, işlemcinin gelecekte ihtiyaç duyabileceği komutları veya verileri önceden yüklemesini sağlar. Bu işlem, işlemcinin daha önce belirlenen bir adres aralığındaki verileri veya komutları,
+   daha önce okunan verileri veya komutları içeren bir ön bellek bölgesine yükler. Böylece, işlemci bu verilere daha hızlı erişebilir çünkü bu veriler önceden yüklenmiştir ve işlemci bunlara hızlıca erişebilir.
+   Bu, işlemcinin genel performansını arttırır ve işlemci ile hafıza arasındaki erişim sürelerini azaltır.
+
+4. FLASH_ACR_LATENCY_5WS : Flash Bellek Erişim Gecikmesi
+
+   FLASH->ACR |= FLASH_ACR_LATENCY_5WS;
+
+-> Flash bellek erişim gecikmesini 5 "hızlı" döngüye alır.
+-> Gecikme (latency), Flash belleğe erişim sırasında geçen süreyi belirler. "5WS" ifadesi, 5 "wait states" (bekleme durumu) anlamına gelir. Bu, işlemcinin Flash bellekten veri okurken veya komut yürütürken
+   ne kadar beklemesi gerektiğini belirtir. Daha yüksek bir gecikme değeri, daha fazla bekleme süresi anlamına gelir, ancak bu, daha yüksek işlemci hızları ve daha yüksek frekansta çalışabilen belleklerle
+   uyumlu olur. Özellikle yüksek işlemci hızlarında, Flash belleğe erişim sırasında veri bütünlüğünü sağlamak için bu gecikme ayarlanmalıdır.
+
+
+NEDEN BU YAPILANDIRMA YAPILIR?
+
+1. Performansı Arttırmak : Flash bellek komut ve veri önbelleklerinin etkinleştirilmesi, işlemcinin bellekteki verilere ve komutlara daha hızlı erişmesini sağlar. Bu, uygulamanın genel performansını arttırır
+   çünkü işlemci veri ve komutları daha hızlı işleyebilir.
+
+2. Bellek Erişim Hızını Optimize Etmek : Ön bellekleme, işlemcinin gelecekteki veri ve komut taleplerini önceden yükleyerek işlemcinin bu verilere hızlıca erişmesini sağlar. Bu, işlemcinin belleğe erişim süresini
+   kısaltır ve daha hızlı işlem yapmasını sağlar.
+
+3. Yüksek Frekansta Çalışma : Yüksek işlemci frekanslarında, Flash bellek erişim gecikmelerinin uygun şekilde ayarlanması gerekir. Bu, işlemcinin yüksek hızlarda güvenli ve verimli çalışmasını sağlar.
+   Uygun gecikme ayarları, yüksek frekansta çalışan işlemcilerle uyumluluğu artırır ve performans düşüşünü engeller.
+
+
+
+ÖZET
+
+-> Bu ayarlarla, Flash bellek erişiminin performansı ve verimliliği artırılır. Komut ve veri önbelleklerinin etkinleştirilmesi, işlemcinin daha hızlı veri ve komut erişimini sağlar, ön bellekleme işlemciye
+   veri ve daha komutları daha hızlı yükler, ve gecikme ayarı, yüksek hızlarda işlemcinin performansını optimize eder. Bu yapılandırmalar, yüksek performanslı uygulamalar geliştirmek için kritiktir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
