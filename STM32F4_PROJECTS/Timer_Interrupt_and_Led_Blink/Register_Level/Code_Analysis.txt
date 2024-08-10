@@ -1,0 +1,62 @@
+Bu kod, STM32F4 serisi bir mikrodenetleyici kullanarak bir LED 'in saniyede bir kez yanıp sönmesini sağlar. Kodun tüm bileşenlerini ve kullanılan registerları detaylı şekilde açıklayalım.
+Not : TIMER_ARR makrosunun değerini değiştirerek ledin yanıp sönme süresini ayarlayabilirsiniz.
+
+1. Sistem Saat Yapılandırması (System_Clock_Config())
+
+   // 1. HSE 'yi etkinleştir ve hazır olmasını bekle
+   RCC->CR |= RCC_CR_HSEON;
+   while (!(RCC->CR & RCC_CR_HSERDY));
+
+   RCC->CR (Clock Control Register)
+   - RCC_CR_HSEON (Bit 16)  :  High-Speed External (HSE) kristalini etkinleştirir. HSE, mikrodenetleyicinin yüksek frekansta çalışmasını sağlar.
+   - RCC_CR_HSERDY (Bit 17) : HSE'nin çalışmaya başladığını gösteren bayrak. "while (!(RCC->CR & RCC_CR_HSERDY));" satırı, HSE' nin hazır olmasını bekler.
+   -----------------------------------------------------------------o----------------------------------------------------------------------
+   // 2. Güç ve Voltaj Regülatörünü ayarla
+   RCC->APB1ENR |= RCC_APB1ENR_PWREN;
+   PWR->CR |= PWR_CR_VOS;
+
+   RCC->APB1ENR (APB1 Peripheral Clock Enable Register)
+   - RCC_APB1ENR_PWREN (Bit 28) : Power Control (PWR) saatini etkinleştirir. Bu, PWR kayıtlarını yapılandırmak için gerekli olan saati açar.
+   
+   PWR->CR (Power Control Register)
+   - PWR_CR_VOS (Bits 14 - 15) : Voltaj ölçekleme modunu seçer. Bu mod, işlemcinin güç tüketimini ve çalışma voltajını belirler.
+   -----------------------------------------------------------------o----------------------------------------------------------------------
+   // 3. FLASH ayarlarını yapılandır
+   FLASH->ACR |= FLASH_ACR_ICEN | FLASH_ACR_DCEN | FLASH_ACR_PRFTEN | FLASH_ACR_LATENCY_5WS;
+
+   FLASH->ACR (Flash Access Control Register)
+   - FLASH_ACR_ICEN (Bit 9)   : Flash komut önbelleğini etkinleştirir. Bu, komutların daha hızlı işlenmesini sağlar.
+   - FLASH_ACR_DCEN (Bit 10)  : Flash veri önbelleğini etkinleştirir. Bu, veri okuma hızını artırır.
+   - FLASH_ACR_PRFTEN (Bit 8) : Flash ön belleklemeyi etkinleştirir. Ön bellekleme, daha hızlı veri erişimi sağlar.
+   - FLASH_ACR_LATENCY_5WS (Bits 0 - 2) : Flash bellek erişim gecikmesini 5 "hızlı" döngüye ayarlar. Bu, yüksek hızda çalışan işlemciler için gerekli gecikmeyi belirler.
+
+   -----------------------------------------------------------------o----------------------------------------------------------------------
+   // 4. Saat Bölücülerini ayarla
+   RCC->CFGR |= RCC_CFGR_HPRE_DIV1;
+   RCC->CFGR |= RCC_CFGR_PPRE1_DIV4;
+   RCC->CFGR |= RCC_CFGR_PPRE2_DIV2;
+
+   RCC->CFGR (Clock Configuration Register)
+   - RCC_CFGR_HPRE_DIV1 (Bits 4 - 7) : AHB saat bölücüsünü 1 olarak ayarlar. AHB saatinin herhangi bir bölünmesini engeller.
+   - RCC_CFGR_PPRE1_DIV4 (Bits 10 - 12) : APB1 saat bölücüsünü 4 olarak ayarlar. APB1 saatinin 4'e bölünmesini sağlar.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
