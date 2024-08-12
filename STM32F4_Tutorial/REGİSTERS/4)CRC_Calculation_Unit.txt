@@ -1,0 +1,150 @@
+CRC Calculation Unit
+--------------------
+-> CRC hesaplama birimi, veri iletimini veya depolama bütünlüğünü doğrulamak için kullanılan bir araçtır. CRC, genellikle veri paketlerinin hatalı olup olmadığını kontrol etmek için kullanılır.
+   Bu mikrodenetleyici üzerinde CRC hesaplama birimi, bir veri kelimesi üzerinden CRC kodu elde etmek için bir sabit üreteç polinomu kullanır.
+
+CRC' nin Başlıca Özellikleri
+----------------------------
+-> CRC-32 (Ethernet) Polinomu : '0x4C11DB7'. Bu polinom, veri bütünlüğünü sağlamak için yaygın olarak kullanılan standart bir CRC polinomudur.
+-> 32-bit Giriş/Çıkış Veri Kaydı : CRC hesaplamaları için kullanılan 32-bit genişliğinde tek bir veri kaydı vardır.
+-> HCLK Döngülerinde CRC Hesaplama : CRC hesaplaması, HCLK saat döngülerinde 4 döngüde gerçekleştirilir.
+-> Genel Amaçlı 8-bit Kaydı : Geçici depolama için kullanılabilir.
+
+CRC Birimi İşlevsel Tanımı
+--------------------------
+CRC hesaplama birimi esas olarak tek bir 32-bit veri kaydından oluşur.
+
+* Bu veri kaydı, CRC hesaplayıcısına yeni veri girmek için bir giriş kaydı olarak kullanılır (kayıt yazılırken).
+* Aynı zamanda, önceki CRC hesaplamasının sonucunu tutar (kayıt okunurken).
+
+Her bir yeni veri kelimesi giriş kaydına yazıldığında, önceki CRC değeri ile yeni olanın birleşimi oluşturulur. Bu hesaplama, tüm 32-bit veri kelimesi üzerinde yapılır, byte bazında değil.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Data Register (CRC_DR)
+-------------------------
+-> Address Offset : 0x00
+-> Reset Value : 0xFFFF FFFF
+-> Giriş ve Çıkış Veri Kaydı : Bu 32-bit'lik register, CRC hesaplama birimine veri göndermek için kullanılır. Her veri yazıldığında, CRC hesaplama birimi bu veriyi işleyerek mevcut CRC değerini günceller.
+-> CRC Sonucunu Tutma : Eğer CRC_DR kaydını okursanız, son hesaplanan CRC değeri elde edilir.
+
+Kullanım Örneği : 
+
+  CRC->DR = 0x12345678;  //Veriyi CRC hesaplayıcısına gönderir.
+  uint32_t crc_result = CRC->DR;  // Son CRC sonucunu alır.
+
+-> CRC_DR, veri iletimi sırasında blok bazında işlenen verinin CRC hesaplaması için kritik öneme sahiptir. Bu register'a yazılan her veri, CRC algoritması tarafından işlenir ve mevcut CRC değeri güncellenir.
+   Eğer bir hata tespit edilirse, CRC sonucu beklenenden farklı olur ve veri hatalı kabul edilir.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. Independent Data Register (CRC_IDR)
+--------------------------------------
+-> Address Offset : 0x04
+-> Reset Value : 0x0000 0000
+-> Bağımsız Veri Deposu : Bu 8-bit'lik register, geçici veri saklama veya küçük veri parçalarının CRC hesaplamalarına dahil edilmesi için kullanılır.
+-> Genişletilebilir Veri İşleme : Büyük veri bloklarını işlemeden önce, küçük veri parçalarının işlenmesi gerektiğinde bu register kullanılır. 
+
+Kullanım Örneği : 
+
+  CRC->IDR = 0xAB;   // Küçük bir veri parçasını CRC hesaplayıcısına gönderir.
+
+-> CRC_IDR, özellikle küçük veri parçalarının CRC hesaplamalarında kullanılmasında önemlidir. Bu register, verinin tam olarak işlenmesi veya geçici olarak saklanması gerektiğinde kullanılır.
+   Özellikle büyük veri bloklarının işlenmesinden önce küçük veri parçalarının işlenmesi gerketiğinde faydalıdır. 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Control Register (CRC_CR)
+----------------------------
+-> Address Offset : 0x08
+-> Reset Value : 0x0000 0000
+-> RESET Bit : CRC_CR kaydındaki bu bit, CRC hesaplama birimini sıfırlar. Bu, CRC_DR kaydını başlangıç değerine (0xFFFF FFFF) geri döndürür ve yeni bir hesaplama yapmadan önce önceki CRC sonuçlarının
+   temizlenmesini sağlar.
+
+Kullanım Örneği : 
+
+  CRC->CR = CRC_CR_RESET;    // CRC hesaplayıcısını sıfırlar.
+
+-> CRC_CR registerındaki RESET bit'i, CRC hesaplama biriminin sıfırlanmasını sağlar. Bu, yeni bir veri setiyle çalışmaya başlamadan önce birimin temizlenmesini ve doğru sonuçlar elde edilmesini sağlar. 
+   Eğer bu bit kullanılmazsa, önceki hesaplama sonuçları yeni hesaplamalarla karıştırılabilir, bu da hatalı CRC sonuçlarına yol açar.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Kullanım Alanları ve Örnek Senaryolar
+-------------------------------------
+
+Veri İletiminde Hata Kontrolü : 
+
+-> Örneğin, bir STM32F4 mikrodenetleyicisi bir sensörden veri alıyor ve bu veriyi bir başka cihaza gönderiyor. Veri iletiminde bir hata olup olmadığını kontrol etmek için, gönderilen veri CRC ile kodlanır ve 
+   karşı taraf bu CRC kodunu doğrular.
+
+
+Flash Bellek Bütünlüğü Kontrolü: 
+
+-> Yazılımın Flash bellekte saklanan kısımlarının bütünlüğünü kontrol etmek için CRC kullanılabilir. Özellikle firmware güncellemelerinde, veri aktarımının doğru bir şekilde yapıldığını garanti etmek için 
+   CRC hesaplamaları yapılır.
+
+
+Dosya ve Veri Bütünlüğü Kontrolü: 
+
+-> STM32F4 mikrodenetleyicisini bir veri kaydedici olarak kullanıyorsanız, kaydedilen verinin bozulup bozulmadığını kontrol etmek için CRC hesaplama birimini kullanabilirsiniz.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ÖNEMLİ NOKTALAR
+---------------
+
+Doğru CRC Hesaplaması: 
+-> CRC biriminin doğru şekilde sıfırlanması, önceki sonuçların yeni hesaplamaları etkilememesi için çok önemlidir. Bu yüzden, yeni bir hesaplama yapılmadan önce CRC_CR'deki RESET bitinin kullanılması şarttır.
+
+Veri Güvenliği: 
+-> CRC hesaplamaları, özellikle kritik uygulamalarda (örneğin, tıbbi cihazlar, güvenlik sistemleri, vb.) veri güvenliğinin sağlanması için çok önemlidir.
+
+
+Bu registerlar, STM32F4 serisi mikrodenetleyicilerde veri bütünlüğü ve güvenliğin sağlanması için kritik öneme sahiptir. CRC hesaplama birimi ve bu birimin registerları, doğru ve güvenilir veri işleme için 
+tasarlanmıştır ve bu nedenle sistem güvenilirliğini artırmak için sıklıkla kullanılır.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Örnek Uygulama Senaryosu:
+
+Bir mikrodenetleyici üzerinden bir sensörden alınan verilerin bir sunucuya gönderildiğini düşünelim. Bu veri aktarımı sırasında, verinin bozulmaması çok önemlidir. İşte bu noktada CRC devreye girer. 
+Veriyi sunucuya göndermeden önce, CRC algoritması ile bu verinin bir kontrol toplamı (CRC değeri) hesaplanır ve bu değer de veri ile birlikte gönderilir. Sunucu tarafında ise bu CRC değeri ile alınan verinin 
+yeniden hesaplanan CRC değeri karşılaştırılır. Eğer iki değer aynıysa, veri doğru iletilmiş demektir. Aksi takdirde, veri aktarımı sırasında bir hata oluşmuştur.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
