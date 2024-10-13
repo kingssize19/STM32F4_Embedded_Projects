@@ -4,5 +4,5 @@
 * **FreeRTOS_CAR_PARKING_SYSTEM :** Projede HCSR04 ile mesafe ölçülmüştür. Bu ölçülen mesafe değerine göre;
     * mesafe 20-30 cm arasında ise Buzzer uzun aralıklarla çalıştırılsın ve sadece yeşil led yakılsın (Tehlike Az!).
     * mesafe 10-20 cm arasında ise Buzzer daha hızlı çalıştırılsın ve yeşil led ile birlikte sarı led yakılsın (Tehlike Orta!!).
-    * mesahe 0-10 cm arasında ise Buzzer çok hızlı şekilde çalıştırılsın be yeşil sarı kırmızı ledlerin hepsi yakılsın (Tehlike Yüksek!!!).
+    * mesafe 0-10 cm arasında ise Buzzer çok hızlı şekilde çalıştırılsın be yeşil sarı kırmızı ledlerin hepsi yakılsın (Tehlike Yüksek!!!).
     * main.c dosyası klasör içerisinde yer almaktadır. Proje .zip formatında klasör içerisinde bulunmaktadır. **NOT :** Proje HAL kütüphanesi kullanılarak tasarlanmıştır.  
