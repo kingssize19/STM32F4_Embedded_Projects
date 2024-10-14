@@ -60,8 +60,8 @@ void RCC_Config(void);
 void RCC_Config(void)
 {
 	RCC->CR &= ~(1 << 0);					//HSI OFF
-	RCC->CR |= (1 << 16);					//HSEO N
-	while (!(RCC->CR & (1 << 17)));			//wait HSE active
+	RCC->CR |= (1 << 16);					//HSE ON
+	while (!(RCC->CR & (1 << 17)));				//wait HSE active
 	RCC->CR |= (1 << 19);
 
 
@@ -73,13 +73,13 @@ void RCC_Config(void)
 	RCC->PLLCFGR |= (168 << 6);				//PLL_N = 168
 
 	RCC->CR |= (1 << 24);					//PLL ON
-	while (!(RCC->CR) & (1 << 25));		    // wait PLL active
+	while (!(RCC->CR) & (1 << 25));		    		// wait PLL active
 
 	//System clock is PLL
 	RCC->CFGR &= ~(1 << 0);
 	RCC->CFGR |= (1 << 1);
 
-	while (!(RCC->CFGR & (1 << 1)));	//Select system clock is PLL clock
+	while (!(RCC->CFGR & (1 << 1)));			//Select system clock is PLL clock
 
 }
 
@@ -116,9 +116,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   systemClock = SystemCoreClock;
 
-  HAL_RCC_DeInit();					//HSIEN --- PLL OFF
+  HAL_RCC_DeInit();					//HSI EN --- PLL OFF
 
-  SystemCoreClockUpdate();			// 16.000.000
+  SystemCoreClockUpdate();				// 16.000.000
   systemClock = SystemCoreClock;
 
   RCC_Config();
