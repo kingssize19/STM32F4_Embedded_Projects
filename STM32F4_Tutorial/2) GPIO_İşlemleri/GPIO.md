@@ -20,9 +20,14 @@ STM32F4'te her pin, çalıştırılacağı moda göre konfigüre edilir. Bu modl
 * **Alternate Function Mode (Alternatif Fonksiyon Modu) :** Pin bir periferik tarafından kullanılacaksa (örneğin, UART, SPI, I2C gibi) bu mod seçilir.
 * **Analog Mode (Analog Modu) :** ADC veya DAC işlemleri için bu mod kullanılır.
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 **Çıkış Modu Türleri :**
+
 * **Push-Pull (Diyot ile Çıkış) :** Pin, aktif olarak lojik 1 veya lojik 0 sinyali üretir.
 * **Open-Drain (Açık Dirençli Çıkış) :** Pin, sadece lojik 0 sinyali üretebilir; lojik 1 ise dış bir dirençle sağlanır.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 **GPIO Pin Hızları :**
 
@@ -31,6 +36,8 @@ GPIO pinlerinin çıkış hızları ayarlanabilir. Farklı hız ayarları şunla
 * **Medium Speed (Orta Hız) :** Genellikle standart uygulamalar için kullanılır.
 * **High Speed (Yüksek Hız) :** Yüksek hız gerektiren veri yollarında (SPI, I2C) kullanılır.
 * **Very High Speed (Çok Yüksek Hız) :** Kritik zamanlama gerektiren yüksek hızlı veri işlemlerinde kullanılır.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 **GPIO Çekme Dirençleri (Pull-up/Pull-down) :**
 
