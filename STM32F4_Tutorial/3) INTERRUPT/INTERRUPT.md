@@ -33,6 +33,91 @@
 
 # HARİCİ KESMELER (EXTERNAL INTERRUPT) \[ EXTI \]
 
+* Harici bir kaynaktan oluşan olaylardan dolayı meydana gelen kesmelere, harici kesmeler denir.
+* STM32F446RE Nucleo kartı 23 adet harici kaynaktan kesme kabul etmektedir.
+* Harici kaynak olarak, dış ortamdan pinler vasıtasıyla gelecek kesme ve kendi içindeki donanımlardan gelen kesmeleri anlayabiliriz.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+**NOT :** Bütün portların x. pinleri EXTIx hattına bağlıdır. Yani A portunun 0'ıncı pini ile B portunun 0'ıncı pinini aynı anda kesme olarak kullanamam.
+EXTI0, EXTI1, EXTI2, ........ , EXTI15.  
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# NVIC (NESTED VECTOR INTERRUPT CONTROL)
+
+* Karmaşık kesme isteklerinin işlemciye sürekli yük getirmemesi için işlemci içerisinde özel bir donanım bloğu oluşturulmuştur. Bu donanıma kesme kontrolörü (interrupt controller) adı verilir.
+  
+* Kesme kontrolörü haklı bir sebeple gelen kesme isteği neticesinde düzgün işleyen programı askıya alarak kesme fonksiyonu (interrupt function) olarak adlandırılan özel kod parçasını işlemeye başlar.
+
+* Kesme fonksiyonunun işletilmesinin bitiminde program kaldığı yerden çalışmaya devam eder.
+
+* STM32F4 serisi mikroişlemcilerde kesme kontrolörü "Nested Vector Interrupt Controller" olarak isimlendirilir.
+
+* NVIC kontrolör mikroişlemci içerisindeki önemli donanım kesmelerini (DMA istekleri, USART, CAN, I2C, ve Timer gibi donanım kesmeleri) ve ayrıca External Interrupt/Event Controller (EXTI) adı verilen donanım vasıtasıyla portlardan gelen kesmeleri kontrol eder.
+
+ 
+I2C   IRQ ------------------NVIC------------------PROCESSOR
+DMA   IRQ ------------------NVIC------------------PROCESSOR
+USART IRQ ------------------NVIC------------------PROCESSOR
+CAN   IRQ ------------------NVIC------------------PROCESSOR
+TIMER IRQ ------------------NVIC------------------PROCESSOR
+
+Port A ---------EXTI--------NVIC------------------PROCESSOR
+Port B ---------EXTI--------NVIC------------------PROCESSOR
+...... ---------EXTI--------NVIC------------------PROCESSOR
+...... ---------EXTI--------NVIC------------------PROCESSOR
+...... ---------EXTI--------NVIC------------------PROCESSOR
+Port I ---------EXTI--------NVIC------------------PROCESSOR
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* SYSCFG_EXTICRx registerleri ile interrupt olarak algılanacak Port-Pin (bit) seçilir.
+
+* Kesmenin yükselen/düşen (rising/falling) kenar veya her ikisinden gelen kesme seçilir. Durumda bir değişiklik olduğunda bunu kesme olarak algılamasını sağlayan EXTI_IMR registerinin biti 1 yapılır.
+
+* EXTI_PR kaydedicisi "1" yapılarak kesme isteğinin oluştuğu bildirilir.
+
+* NVIC kontroller ilgili interrupt rutinini yönlendirir.
+
+* Rutin içerisindeki komutlar işlendikten sonra tekrar ana programa dönülür.
+
+* Event olarak isimlendirilen kaydedici, mikrodenetleyiciyi standby (bekleme) durumundan çıkarak (uyandırma) işlemi de yapabilmektedir. EXTI_EMR kaydedicisi ile bu sağlanmaktadır.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+**Priority :** Öncelik seviyesi. Bu değer ne kadar düşükse öncelik o kadar yüksektir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
