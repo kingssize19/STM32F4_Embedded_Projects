@@ -57,18 +57,18 @@ EXTI0, EXTI1, EXTI2, ........ , EXTI15.
 * NVIC kontrolör mikroişlemci içerisindeki önemli donanım kesmelerini (DMA istekleri, USART, CAN, I2C, ve Timer gibi donanım kesmeleri) ve ayrıca External Interrupt/Event Controller (EXTI) adı verilen donanım vasıtasıyla portlardan gelen kesmeleri kontrol eder.
 
  
-* I2C IRQ ----------------------NVIC------------------PROCESSOR
-* DMA IRQ ---------------------NVIC------------------PROCESSOR
-* USART IRQ -------------------NVIC------------------PROCESSOR
-* CAN IRQ ---------------------NVIC------------------PROCESSOR
-* TIMER IRQ -------------------NVIC------------------PROCESSOR
+* I2C IRQ ---------> NVIC --------->PROCESSOR
+* DMA IRQ ---------> NVIC --------->PROCESSOR
+* USART IRQ ---------> NVIC --------->PROCESSOR
+* CAN IRQ ---------> NVIC --------->PROCESSOR
+* TIMER IRQ ---------> NVIC --------->PROCESSOR
 
-* Port A ---------EXTI--------NVIC------------------PROCESSOR
-* Port B ------------EXTI--------NVIC------------------PROCESSOR
-* ...... ----------EXTI--------NVIC------------------PROCESSOR
-* ...... ----------EXTI--------NVIC------------------PROCESSOR
-* ...... ----------EXTI--------NVIC------------------PROCESSOR
-* Port I ----------EXTI--------NVIC------------------PROCESSOR
+* Port A ---------> EXTI ---------> NVIC --------->PROCESSOR
+* Port B ---------> EXTI ---------> NVIC --------->PROCESSOR
+* ...... ---------> EXTI ---------> NVIC --------->PROCESSOR
+* ...... ---------> EXTI ---------> NVIC --------->PROCESSOR
+* ...... ---------> EXTI ---------> NVIC --------->PROCESSOR
+* Port I ---------> EXTI ---------> NVIC --------->PROCESSOR
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
