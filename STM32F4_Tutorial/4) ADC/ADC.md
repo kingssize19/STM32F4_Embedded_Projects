@@ -87,9 +87,43 @@
 
 **NOT :** Çözünürlük arttıkça ADC biriminin ölçüm hızı düşmektedir.
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+## ADC DÖNÜŞÜM MODLARI
 
+**1. Tek Dönüştürme Modu :** Sadece bir kere analog sinyali dijitale çevirir.
+**2. Sürekli Dönüştürme Modu :** Her dönüştürme işlemi bittiğinde, yeni bir dönüştürme işlemine başlar. Yani sürekli olarak analog sinyalimizin dijital olarak çıktısını verir.
+**3. Tarama Modu :** Bu mod ise birden fazla kanalda ADC çevrimi yaptığımız zaman, seçtiğimiz kanallarda tarama yaparak bu kanallarda dönüşüm yapmaya çalışır. Eğer bu modu sürekli mod gibi çalıştırırsak, seçtiğimiz kanalları sürekli olarak tara. Aksi taktirde seçtiğimiz kanallar bir kere taranır ve durur.
+**4. Süreksiz Mod :** Bu modda ise kanallar üzerinden çevrim sayınız 8 den az olmalıdır. Bu n değeri ADC_CR1 registerinde DISCNUM\[2:0\] bitlerinde set edilir. Bu modun çalışması için dışarıdan tetikleyici seçilmelidir. Her tetiklemede yazdığınız n sayısı kadar kanalın dijital olarak çevirme işlemini yapar. 
 
+* Örneğin dönüşüm yapacağınız kanalları seçtiniz, daha sonra n sayısını da 4 olarak yazdınız. Seçtiğiniz sıralı kanallarda 2, 13, 11, 9, 4, 5 olsun. İlk tetiklemede 2, 13, 11, 9. kanallarda çevrim yapılır. İkinci tetiklemede 4 ve 5. kanallarda çevrim yapılır. Üçüncü tetiklemede tekrar 2, 13, 11, 9. kanallarda çevrim yapılır. Okunan veriler ADC_DR registerine yerleştirilirken ya sağ yada sola hizalı olarak yerleştirilir.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* ADC çözünürlüğü ve çevrim hızı ilişkisi
+| Çözünürlük | ADC Çevrim Hızı |
+|--|--|
+| 12 Bit | 12 Cycle |
+| 10 Bit | 10 Cycle |
+| 8 Bit | 8 Cycle |
+| 6 Bit | 6 Cycle |
+
+* STM32F4 mikrodenetleyicisinde 0V-3.6V aralığında ölçümler yapılabilmektedir.
+* Buradaki voltaj aralığında ADC biriminin beslemesi (Vdda - Vssa) ile ilgili bir durumdur.
+* ADC biriminin besleme voltajı ve referans gerilimi (Vref+, Vref-) ADC biriminin ölçebileceği gerilim aralığını belirler.
+* Her ne olursa olsun ADC birimi 3.6V dan fazlasını ölçemez.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Analog bir değerden dijital bir değere dönüşüm yapılırken dikkat edilmesi gereken hususlar vardır.
+* Bunlardan en önemlisi, ölçülecek analog gerilim değerinin dönüşümü yapacak çipin ölçüm aralığında olması gerekir.
+* Diğer önemli nokta, ölçüm yapılacak hassasiyetin belirlenmesi ve buna uygun bit genişliğinde bir dönüştürücü seçilmelidir.
+* Ölçüm hassasiyetinde önemli olan dönüşüm yapacak sistemin bir çözünürlüğüdür (Resolution).
+  * Resolution = Vref + /(2^n - 1)
+* Örneğin 8 bit çözünürlüğe sahip ve 0-3.3V aralığında ölçüm yapabilen bir ADC ölçüm ünitesinin ölçebileceği minimum değer (hassasiyet) yaklaşık 12 mV'dur.
+  * Resolution = 3.3 / (2^8 - 1) = 3.3 / 255 = 0,01294... ~= 12mV
+* 12 bit çözünürlüğe sahip ve 0-3.3V aralığında ölçüm yapabilen bir ADC ölçüm ünitesinin ölçebileceği minimum değer (hasssasiyet) yaklaşık olarak 805uV dur.
+  * Resolution = 3.3 / (2^12 - 1) = 3.3 / 4095 ~= 805uV
 
 
 
