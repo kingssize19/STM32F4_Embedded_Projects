@@ -61,7 +61,49 @@ TIMx_CNT, zamanlayıcının mevcut sayma değerini tutan kayıttır. Bu değer, 
     ```
     Bu satır, TIM2 zamanlayıcısının o anki sayım değerini elde eder.
 
+**2. TIMx_PSC (Prescaler Register)**
 
+TIMx_PSC, zamanlayıcının giriş saat sinyalini bölen (bölme oranını ayarlayan) register'dır. Bu, timer'ın sayma hızını ayarlamak için kullanılır. Prescaler değeri sayesinde, timer daha yavaş bir frekansta sayar, bu da daha uzun periyotlar elde etmemizi sağlar.
+
+* Çalışma Prensibi:
+  * Timer'a giren saat sinyali (APB1 veya APB2 saat frekansı) PSC değeri ile bölünür.
+  * PSC 'ye yazılan değere göre giriş frekansı bölünür. Örneğin, PSC = 7 olarak ayarlanırsa, saat sinyali 8'e bölünmüş olur.
+  * Timer artık giriş frekansının 1/8 hızında çalışır.
+
+* Örnek Kullanım:
+  * ```c
+    TIM2->PSC = 79; // TIM2 için prescaler değerini 79 yap
+    ```
+    Bu kod ile, eğer sistem saat frekansı 80 MHz ise, 80 MHz / (79 + 1) = 1 MHz'lik bir sayım frekansı elde edilir.
+
+**3. TIMx_ARR (AutoReload Register)**
+
+TIMx_ARR, timer'ın ulaşacağı maksimum sayma değerini belirleyen kayıttır. Timer, CNT register'ı ARR değerine ulaştığında sıfırlanır (veya tersine sayıyorsa başlangıç değerine döner). Bu özellik, timer'ın belirli periyotlarda taşma yapmasını sağlar, bu da bir PWM sinyali oluşturmak veya belirli zaman periyotlarında kesme oluşturmak için kullanılır.
+
+* Çalışma Prensibi:
+  * CNT register'ı ARR değerine ulaştığında sıfırlanır ve update interrupt (güncelleme kesmesi) oluşur.
+  * ARR'ye yazılan değer, timer'ın sayım süresini belirler. Bu değeri ayarlayarak timer'ın çalışma periyodunu kontrol edebiliriz.
+
+* Örnek Kullanım:
+  * ```c
+    TIM2->ARR = 999; // TIM2'nin taşma (overflow) değeri 999 olarak ayarla
+    ```
+    Bu kod, TIM2'nin CNT değerinin 0'dan 999'a kadar saymasını sağlar. CNT 999'a ulaştığında sıfırlanır ve bu döngü tekrarlanır.
+
+**Birlikte Kullanımı**
+
+Bu üç register birlikte çalışarak zamanlayıcıyı kontrol eder. Örneğin, bir saniyelik bir zamanlayıcı ayarlamak istiyorsanız:
+* Prescaler değeri ile giriş frekansını düşürün.
+* ARR değerini giriş frekansına göre ayarlayın.
+
+Örneğin, sistem frekansınız 80 MHz ise, PSC’yi 7999 yaparak 80 MHz’lik frekansı 10 kHz’e düşürebilirsiniz. Bu durumda, ARR değerini 10.000 yaparsanız, timer her 1 saniyede bir taşma yapacaktır.
+
+**ÖZET TABLO**
+| Register | Açıklama |
+|--|--|
+| CNT | Mevcut sayım değeri, timer çalıştıkça artar veya azalır. |
+| PSC | Timer giriş frekansını belirli bir oranda böler. |
+| ARR | Timer'ın ulaşacağı maksimum değer; bu değere ulaştığında CNT sıfırlanır ve periyot tamamlanır. |
 
 
 
