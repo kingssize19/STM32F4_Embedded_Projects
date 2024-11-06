@@ -46,6 +46,7 @@
 
 STM32F446RE gibi STM32 serisi mikrodenetleyicilerde, TIMx_CNT, TIMx_PSC ve TIMx_ARR gibi timer (zamanlayıcı) register' ları, belirli zamanlama veya PWM (Pulse Width Modulation) gibi uygulamalar için kullanılır. Her biri farklı bir işlevi yerine getirir. Aşağıda her birinin işlevini detaylı bir şekilde açıklayalım:
 
+
 **1. TIMx_CNT (Counter Register)**
 
 TIMx_CNT, zamanlayıcının mevcut sayma değerini tutan kayıttır. Bu değer, timer çalışırken sürekli olarak artar veya azalır (moduna göre). TIMx_CNT, belirlenen başlangıç değeri ile AutoReload Register (ARR) arasında çalışır. Bu register'in temel işlevi, sayım işlemini gerçekleştirmektir.
@@ -60,6 +61,8 @@ TIMx_CNT, zamanlayıcının mevcut sayma değerini tutan kayıttır. Bu değer, 
     uint32_t current_count = TIM2->CNT; // TIM2'nin mevcut sayım değerini al
     ```
     Bu satır, TIM2 zamanlayıcısının o anki sayım değerini elde eder.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 **2. TIMx_PSC (Prescaler Register)**
 
@@ -76,6 +79,8 @@ TIMx_PSC, zamanlayıcının giriş saat sinyalini bölen (bölme oranını ayarl
     ```
     Bu kod ile, eğer sistem saat frekansı 80 MHz ise, 80 MHz / (79 + 1) = 1 MHz'lik bir sayım frekansı elde edilir.
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 **3. TIMx_ARR (AutoReload Register)**
 
 TIMx_ARR, timer'ın ulaşacağı maksimum sayma değerini belirleyen kayıttır. Timer, CNT register'ı ARR değerine ulaştığında sıfırlanır (veya tersine sayıyorsa başlangıç değerine döner). Bu özellik, timer'ın belirli periyotlarda taşma yapmasını sağlar, bu da bir PWM sinyali oluşturmak veya belirli zaman periyotlarında kesme oluşturmak için kullanılır.
@@ -89,6 +94,8 @@ TIMx_ARR, timer'ın ulaşacağı maksimum sayma değerini belirleyen kayıttır.
     TIM2->ARR = 999; // TIM2'nin taşma (overflow) değeri 999 olarak ayarla
     ```
     Bu kod, TIM2'nin CNT değerinin 0'dan 999'a kadar saymasını sağlar. CNT 999'a ulaştığında sıfırlanır ve bu döngü tekrarlanır.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 **Birlikte Kullanımı**
 
@@ -105,5 +112,6 @@ Bu üç register birlikte çalışarak zamanlayıcıyı kontrol eder. Örneğin,
 | PSC | Timer giriş frekansını belirli bir oranda böler. |
 | ARR | Timer'ın ulaşacağı maksimum değer; bu değere ulaştığında CNT sıfırlanır ve periyot tamamlanır. |
 
+Bu üç register kullanılarak, mikrodenetleyici üzerinde belirli zaman aralıklarında işlemler yaptırmak veya PWM gibi uygulamalar gerçekleştirmek mümkündür.
 
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------
