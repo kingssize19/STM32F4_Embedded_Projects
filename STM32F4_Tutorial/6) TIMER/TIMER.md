@@ -20,3 +20,12 @@
 | TIM2 ve TIM5 | 32 Bit Genel Amaçlı Timer |
 | TIM6 ve TIM7 | 16 Bit Basit Timer |
 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+### STM32F4 TIMER BİRİMLERİNİN ÖZELLİKLERİ
+
+1 - Genel Amaçlı Timer2, Timer3, Timer4 ve Timer5 Birimleri
+
+
+
