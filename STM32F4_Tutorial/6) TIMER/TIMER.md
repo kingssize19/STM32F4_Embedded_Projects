@@ -114,4 +114,101 @@ Bu üç register birlikte çalışarak zamanlayıcıyı kontrol eder. Örneğin,
 
 Bu üç register kullanılarak, mikrodenetleyici üzerinde belirli zaman aralıklarında işlemler yaptırmak veya PWM gibi uygulamalar gerçekleştirmek mümkündür.
 
------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+## TIMER ÇALIŞMA MODLARI
+
+**1. Upcounter Mode (Yukarı Sayma Modu)**
+
+Bu modda timer, sıfırdan başlar ve AutoReload Register (ARR) değerine kadar sayar. CNT register'ı ARR değerine ulaştığında sıfırlanır ve bir güncelleme (update) olayı tetiklenir. Bu mod periyodik olaylar veya kesmeler oluşturmak için kullanılır. 
+* **Kullanım Alanları :** Zamanlayıcı, periyodik kesme oluşturma.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+**2. Downcounter Mode (Aşağı Sayma Modu)**
+
+Aşağı sayma modunda timer, ARR register'da tanımlı değerden başlayarak sıfıra doğru sayar. CNT sıfıra ulaştığında sıfırlanır ve yine bir güncelleme (update) olayı tetiklenir.
+* **Kullanım Alanları:** Geri sayım uygulamaları veya periyodik işlemler.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+**3. Center-Aligned Mode (Merkez Hizalamalı Mod)**
+
+Bu modda timer, ARR değerine kadar yukarı doğru sayar, ardından sıfıra doğru geri sayar. Yani bir yukarı ve bir aşağı sayma döngüsü oluşturur. Bu sayede sinyaller merkezde hizalanır ve daha düzgün bir PWM sinyali elde edilebilir. Timer yukarı ve aşağı sayarken Compare Match olayları tetiklenir.
+
+* **Kullanım Alanları:** PWM sinyal üretimi, motor sürücüleri gibi hassas uygulamalarda simetrik sinyal üretimi.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+**4. One-Pulse Mode (Tek Darbe Modu)**
+
+Bu mod, timer’ın yalnızca bir defa belirli bir pulse (darbe) üretmesi için kullanılır. One-Pulse Mode (OPM) aktifleştirildiğinde, timer bir olayla tetiklenir ve belirli bir darbe üretir. Bu darbeyi ürettikten sonra timer otomatik olarak durur. Tek darbe üretiminde tetikleyici bir giriş veya program üzerinden bir olay kullanılabilir.
+
+* **Kullanım Alanları:** Sensör tetikleme, darbe üretimi, belirli aralıkta bir işlem gerçekleştirme.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+**5. Output Compare Mode (Çıkış Karşılaştırma Modu)**
+
+Bu modda timer, belirli bir değerle (örneğin ARR değeri) çıkış değerini karşılaştırır ve belirli bir koşul sağlandığında çıkışı değiştirir. Bu, zamanlama kontrolü ve periyodik işlemler için kullanılır. Output Compare (OC) modları ile farklı çıkış davranışları (toggle, set, reset) oluşturabilirsiniz.
+
+* **Kullanım Alanları:** Kesme tetikleme, periyodik görevler veya zamanlayıcı bazlı işlemler.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+**6. Input Capture Mode (Giriş Yakalama Modu)**
+
+Input Capture Mode, belirli bir giriş sinyalinin zamanını yakalamak için kullanılır. Timer, giriş pinine uygulanan sinyalin yükselen veya alçalan kenarında CNT değerini kaydeder. Bu mod, darbe genişliği veya frekans ölçümü gibi zamanlama işlemlerinde kullanılır.
+
+* **Kullanım Alanları:** Frekans ölçümü, darbe genişliği ölçümü, olayların zamanını tespit etme.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+**7. PWM Mode (Pulse Width Modulation - Darbe Genişlik Modülasyonu)**
+
+PWM modunda timer, PWM sinyalleri üretmek için kullanılır. PWM sinyalinin periyodu ARR değeri ile belirlenirken, duty cycle (görev döngüsü) çıkış karşılaştırma (Output Compare) registerları ile ayarlanır. Duty cycle ayarları sayesinde, sinyalin ne kadar süre boyunca açık veya kapalı kalacağı belirlenebilir.
+
+* **Kullanım Alanları:** Motor sürme, LED parlaklık kontrolü, güç kontrol uygulamaları.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+**8. Encoder Interface Mode (Enkoder Arabirimi Modu)**
+
+Encoder Mode, enkoderlerden okuma yapmak için özel olarak tasarlanmıştır. Timer, enkoderin hareket yönünü ve konumunu belirlemek için A ve B fazlarını okur. Bu mod, motor hareketini veya belirli bir eksendeki hareketi ölçmek için kullanılır.
+
+* **Kullanım Alanları:** Motor geri bildirimi, pozisyon ölçümü, hız ölçümü.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+**9. Slave Mode (Köle Modu)**
+
+Timer’lar bazen slave mode (köle modu) olarak yapılandırılabilir ve bir başka timer veya tetikleyici sinyal ile senkronize çalışabilir. Bu mod, çoklu timer senkronizasyonu veya başka bir olayın tetiklemesiyle işlemleri başlatmak için kullanılır.
+
+* **Kullanım Alanları:** Çoklu timer senkronizasyonu, olay bazlı tetiklemeler.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+## Özet Tablo
+
+| Mod | Açıklama | Kullanım Alanları |
+|--|--|--|
+| Upcounter Mode | 0’dan yukarı doğru sayar, ARR’ye ulaşınca sıfırlanır. | Periyodik işlemler |
+| Downcounter Mode	| ARR’den aşağı doğru sayar, sıfıra ulaştığında sıfırlanır.	| Geri sayım işlemler | 
+| Center-Aligned Mode	| Yukarı ve aşağı doğru sayarak simetrik sinyal oluşturur.	| PWM üretimi |
+| One-Pulse Mode	| Tek seferlik darbe üretir, tetikleme ile çalışır ve ardından durur. |	Darbe üretimi |
+| Output Compare Mode |	Timer ile belirli bir değeri karşılaştırarak kesme veya çıkış sinyali üretir. |	Zamanlayıcı tabanlı işlemler |
+| Input Capture Mode |	Giriş sinyalinin zamanını yakalar, sinyalin genişliğini veya frekansını ölçer. |	Frekans ve darbe genişliği ölçümü |
+| PWM Mode	| PWM sinyali üretir, duty cycle ve periyod kontrol edilir. |	Motor sürme, LED parlaklık kontrolü |
+| Encoder Interface Mode |	Enkoder sinyallerini okuyarak yön ve konum bilgisi sağlar. |	Pozisyon ve hız ölçümü |
+| Slave Mode |	Başka bir timer veya olayla senkronize çalışır. |	Çoklu timer senkronizasyonu |
+
+STM32 timer modları, çok çeşitli zamanlama ve sinyal işleme uygulamalarında kullanılır ve her mod belirli bir ihtiyaca göre optimize edilmiştir. Bu modları doğru şekilde yapılandırarak, mikrodenetleyici tabanlı projelerinizde hassas zamanlama ve kontrol sağlayabilirsiniz.
+
+
+
+
+
+
+
+
+
