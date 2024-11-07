@@ -107,6 +107,12 @@ Bu fonksiyon, ana program döngüsünü içerir.
 
 Bu sayede LED, Timer 2’nin sayacına bağlı olarak belirli aralıklarla yanıp sönmektedir
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## Zaman Hesaplaması
+
+Kodda timer süre hesaplaması yapılabilir. Timer 2'nin sistem saat frekansı 84 MHz (STM32F4 DISC1 için) olup prescaler ve period değerleriyle bölünerek bir süre hesaplanabilir.
+
 
 ![Uploading image.png…]()
 
