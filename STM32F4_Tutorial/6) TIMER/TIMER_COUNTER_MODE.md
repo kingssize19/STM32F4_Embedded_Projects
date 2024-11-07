@@ -111,11 +111,15 @@ Bu sayede LED, Timer 2’nin sayacına bağlı olarak belirli aralıklarla yanı
 
 ## Zaman Hesaplaması
 
-Kodda timer süre hesaplaması yapılabilir. Timer 2'nin sistem saat frekansı 84 MHz (STM32F4 DISC1 için) olup prescaler ve period değerleriyle bölünerek bir süre hesaplanabilir.
+Kodda timer süre hesaplaması yapılabilir. Timer 2'nin sistem saat frekansı 84 MHz (STM32F4 DISC1 için) olup prescaler ve period değerleriyle bölünerek bir süre hesaplanabilir : 
 
+![image](https://github.com/user-attachments/assets/2ec56ad6-f9cf-4d51-856d-25bdf9d30c0f)
 
-![Uploading image.png…]()
+Bu durumda prescaler değeri 44999, period değeri 7999 olduğuna göre : 
 
+![image](https://github.com/user-attachments/assets/9e6df051-2019-4c99-9e2d-2b8fc0b5688c)
+
+Sonuç olarak, LED her 4.3 saniyede bir yanıp söner.
 
 
 
